@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Student Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="print.css" media="print">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                StudentHub
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" data-page="dashboard" class="nav-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" data-page="courses" class="nav-link"><i class="fas fa-book"></i> Courses</a></li>
+                <li><a href="#" data-page="assignments" class="nav-link"><i class="fas fa-tasks"></i> Assignments</a></li>
+                <li><a href="#" data-page="attendance" class="nav-link"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                <li><a href="#" data-page="grades" class="nav-link"><i class="fas fa-chart-line"></i> Grades</a></li>
+                <li><a href="#" data-page="profile" class="nav-link"><i class="fas fa-user"></i> Profile</a></li>
+                <li><button id="logout-btn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+            </ul>
+            <button class="menu-toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Auth Section (Visible when not logged in) -->
+    <section id="auth-section" class="auth-section">
+        <div class="auth-container container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="register">Register</button>
+            </div>
+            
+            <div id="login-form" class="auth-form active">
+                <h2>Welcome Back!</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required placeholder="student@example.com">
+                        <div class="error-message" id="login-email-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required placeholder="••••••••">
+                        <div class="error-message" id="login-password-error"></div>
+                    </div>
+                    <button type="submit" class="cta-button">Login</button>
+                </form>
+            </div>
+            
+            <div id="register-form" class="auth-form">
+                <h2>Create Account</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="register-name">Full Name</label>
+                        <input type="text" id="register-name" required placeholder="John Doe">
+                        <div class="error-message" id="register-name-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required placeholder="student@example.com">
+                        <div class="error-message" id="register-email-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" required placeholder="At least 8 characters with a number">
+                        <div class="error-message" id="register-password-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm">Confirm Password</label>
+                        <input type="password" id="register-confirm" required placeholder="Confirm your password">
+                        <div class="error-message" id="register-confirm-error"></div>
+                    </div>
+                    <button type="submit" class="cta-button">Register</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content (Visible when logged in) -->
+    <main id="main-content" class="main-content hidden">
+        <div class="container">
+            <!-- Dashboard -->
+            <section id="dashboard" class="page active">
+                <div class="dashboard-header">
+                    <h1>Dashboard</h1>
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-book"></i>
+                            <h3 id="course-count">0</h3>
+                            <p>Courses</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-tasks"></i>
+                            <h3 id="assignment-count">0</h3>
+                            <p>Pending Assignments</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-chart-line"></i>
+                            <h3 id="gpa-display">0.0</h3>
+                            <p>Current GPA</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-check"></i>
+                            <h3 id="attendance-percent">0%</h3>
+                            <p>Attendance</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card upcoming-assignments">
+                        <h3>Upcoming Assignments</h3>
+                        <div id="upcoming-list"></div>
+                    </div>
+                    <div class="dashboard-card recent-grades">
+                        <h3>Recent Grades</h3>
+                        <div id="recent-grades-list"></div>
+                    </div>
+                    <div class="dashboard-card quick-actions">
+                        <h3>Quick Actions</h3>
+                        <button class="action-btn" data-action="add-course">
+                            <i class="fas fa-plus"></i> Add Course
+                        </button>
+                        <button class="action-btn" data-action="mark-attendance">
+                            <i class="fas fa-calendar-plus"></i> Mark Attendance
+                        </button>
+                        <button class="action-btn" data-action="generate-report">
+                            <i class="fas fa-print"></i> Generate Report
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Courses -->
+            <section id="courses" class="page">
+                <div class="page-header">
+                    <h1>Course Management</h1>
+                    <button class="cta-button" id="add-course-btn">
+                        <i class="fas fa-plus"></i> Add Course
+                    </button>
+                </div>
+                
+                <div class="controls">
+                    <input type="text" id="course-search" placeholder="Search courses..." class="search-input">
+                    <select id="semester-filter" class="filter-select">
+                        <option value="">All Semesters</option>
+                        <option value="Fall 2024">Fall 2024</option>
+                        <option value="Spring 2025">Spring 2025</option>
+                        <option value="Summer 2025">Summer 2025</option>
+                    </select>
+                    <select id="course-sort" class="filter-select">
+                        <option value="title">Sort by Title</option>
+                        <option value="credits">Sort by Credits</option>
+                        <option value="grade">Sort by Grade</option>
+                    </select>
+                </div>
+                
+                <div id="courses-list" class="courses-list"></div>
+                
+                <!-- Course Modal -->
+                <div id="course-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <h2 id="modal-title">Add Course</h2>
+                        <form id="course-form">
+                            <input type="hidden" id="course-id">
+                            <div class="form-group">
+                                <label for="course-title">Course Title</label>
+                                <input type="text" id="course-title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="course-instructor">Instructor</label>
+                                <input type="text" id="course-instructor" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="course-credits">Credits</label>
+                                <input type="number" id="course-credits" min="1" max="5" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="course-semester">Semester</label>
+                                <select id="course-semester" required>
+                                    <option value="Fall 2024">Fall 2024</option>
+                                    <option value="Spring 2025">Spring 2025</option>
+                                    <option value="Summer 2025">Summer 2025</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="course-grade">Grade (Optional)</label>
+                                <select id="course-grade">
+                                    <option value="">Not Graded</option>
+                                    <option value="A">A (4.0)</option>
+                                    <option value="B">B (3.0)</option>
+                                    <option value="C">C (2.0)</option>
+                                    <option value="D">D (1.0)</option>
+                                    <option value="F">F (0.0)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="cta-button">Save Course</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Assignments -->
+            <section id="assignments" class="page">
+                <div class="page-header">
+                    <h1>Assignments</h1>
+                    <button class="cta-button" id="add-assignment-btn">
+                        <i class="fas fa-plus"></i> Add Assignment
+                    </button>
+                </div>
+                
+                <div id="assignments-list" class="assignments-list"></div>
+                
+                <!-- Assignment Modal -->
+                <div id="assignment-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <h2 id="assignment-modal-title">Add Assignment</h2>
+                        <form id="assignment-form">
+                            <input type="hidden" id="assignment-id">
+                            <div class="form-group">
+                                <label for="assignment-title">Title</label>
+                                <input type="text" id="assignment-title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="assignment-course">Course</label>
+                                <select id="assignment-course" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="assignment-due">Due Date</label>
+                                <input type="date" id="assignment-due" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="assignment-description">Description</label>
+                                <textarea id="assignment-description" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="assignment-points">Total Points</label>
+                                <input type="number" id="assignment-points" min="1" max="1000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="assignment-weight">Weight (%)</label>
+                                <input type="number" id="assignment-weight" min="1" max="100" required>
+                            </div>
+                            <button type="submit" class="cta-button">Save Assignment</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Submission Modal -->
+                <div id="submission-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <h2>Submit Assignment</h2>
+                        <form id="submission-form">
+                            <input type="hidden" id="submission-assignment-id">
+                            <div class="form-group">
+                                <label for="submission-text">Your Solution</label>
+                                <textarea id="submission-text" rows="6" placeholder="Paste your solution here..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="submission-file">Or Upload File</label>
+                                <input type="file" id="submission-file">
+                            </div>
+                            <button type="submit" class="cta-button">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Attendance -->
+            <section id="attendance" class="page">
+                <div class="page-header">
+                    <h1>Attendance Tracker</h1>
+                    <button class="cta-button" id="mark-attendance-btn">
+                        <i class="fas fa-calendar-plus"></i> Mark Attendance
+                    </button>
+                </div>
+                
+                <div class="attendance-summary">
+                    <div class="summary-card">
+                        <h3>Overall Attendance</h3>
+                        <div class="attendance-percentage" id="overall-attendance">0%</div>
+                    </div>
+                </div>
+                
+                <div id="attendance-records" class="attendance-records"></div>
+                
+                <!-- Attendance Modal -->
+                <div id="attendance-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <h2>Mark Attendance</h2>
+                        <form id="attendance-form">
+                            <div class="form-group">
+                                <label for="attendance-course">Course</label>
+                                <select id="attendance-course" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="attendance-date">Date</label>
+                                <input type="date" id="attendance-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="attendance-status">Status</label>
+                                <select id="attendance-status" required>
+                                    <option value="present">Present</option>
+                                    <option value="absent">Absent</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="cta-button">Save Attendance</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grades -->
+            <section id="grades" class="page">
+                <div class="page-header">
+                    <h1>Grades & GPA</h1>
+                    <button class="cta-button" id="calculate-gpa-btn">
+                        <i class="fas fa-calculator"></i> Calculate GPA
+                    </button>
+                </div>
+                
+                <div class="gpa-summary">
+                    <div class="gpa-card">
+                        <h3>Current GPA</h3>
+                        <div class="gpa-value" id="current-gpa">0.0</div>
+                    </div>
+                    <div class="gpa-card">
+                        <h3>Total Credits</h3>
+                        <div class="gpa-value" id="total-credits">0</div>
+                    </div>
+                </div>
+                
+                <div id="grades-list" class="grades-list"></div>
+                
+                <!-- Grade Entry Modal -->
+                <div id="grade-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <h2>Enter Grade</h2>
+                        <form id="grade-form">
+                            <input type="hidden" id="grade-assignment-id">
+                            <div class="form-group">
+                                <label for="grade-score">Score</label>
+                                <input type="number" id="grade-score" min="0" required>
+                                <span>/ <span id="max-points">100</span> points</span>
+                            </div>
+                            <button type="submit" class="cta-button">Save Grade</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile -->
+            <section id="profile" class="page">
+                <div class="page-header">
+                    <h1>My Profile</h1>
+                </div>
+                
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="profile-image-container">
+                            <img id="profile-image" src="https://via.placeholder.com/150" alt="Profile Picture">
+                            <label for="image-upload" class="upload-btn">
+                                <i class="fas fa-camera"></i> Change Photo
+                            </label>
+                            <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="profile-info">
+                            <h2 id="profile-name">John Doe</h2>
+                            <p id="profile-email">student@example.com</p>
+                            <p id="profile-id">Student ID: 20240001</p>
+                        </div>
+                    </div>
+                    
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label for="profile-bio">Bio</label>
+                            <textarea id="profile-bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-major">Major</label>
+                            <input type="text" id="profile-major" placeholder="Computer Science">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-year">Year</label>
+                            <select id="profile-year">
+                                <option value="Freshman">Freshman</option>
+                                <option value="Sophomore">Sophomore</option>
+                                <option value="Junior">Junior</option>
+                                <option value="Senior">Senior</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="cta-button">Save Profile</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Report Card -->
+            <div id="report-card" class="report-card hidden">
+                <div class="report-header">
+                    <h1>Official Report Card</h1>
+                    <div class="student-info">
+                        <h2 id="report-name">John Doe</h2>
+                        <p id="report-id">Student ID: 20240001</p>
+                        <p id="report-date">Date: October 15, 2024</p>
+                    </div>
+                </div>
+                
+                <div class="report-summary">
+                    <div class="summary-item">
+                        <h3>GPA</h3>
+                        <p id="report-gpa">0.0</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Credits</h3>
+                        <p id="report-credits">0</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Attendance</h3>
+                        <p id="report-attendance">0%</p>
+                    </div>
+                </div>
+                
+                <table class="grades-table">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Instructor</th>
+                            <th>Credits</th>
+                            <th>Grade</th>
+                            <th>Attendance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="report-courses">
+                        <!-- Course data will be inserted here -->
+                    </tbody>
+                </table>
+                
+                <div class="report-footer">
+                    <button id="print-report" class="cta-button">
+                        <i class="fas fa-print"></i> Print Report
+                    </button>
+                    <button id="close-report" class="secondary-button">Close</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden">
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="modules/auth.js"></script>
+    <script src="modules/profile.js"></script>
+    <script src="modules/courses.js"></script>
+    <script src="modules/assignments.js"></script>
+    <script src="modules/grades.js"></script>
+    <script src="modules/attendance.js"></script>
+    <script src="modules/report.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+/* Print Styles for Report Card */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    
+    #report-card,
+    #report-card * {
+        visibility: visible;
+    }
+    
+    #report-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        box-shadow: none;
+        padding: 0;
+    }
+    
+    .report-footer {
+        display: none;
+    }
+    
+    .toast {
+        display: none;
+    }
+    
+    @page {
+        margin: 2cm;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+    
+    h1 {
+        font-size: 24pt;
+        margin-bottom: 20pt;
+    }
+    
+    h2 {
+        font-size: 18pt;
+    }
+    
+    h3 {
+        font-size: 14pt;
+    }
+    
+    .grades-table {
+        border: 1pt solid #000;
+    }
+    
+    .grades-table th,
+    .grades-table td {
+        border: 1pt solid #000;
+        padding: 8pt;
+    }
+}
