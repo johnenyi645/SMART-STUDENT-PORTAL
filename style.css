@@ -1061,3 +1061,11 @@ body {
         page-break-inside: avoid;
     }
 }
+
+.footer{
+    background: #2c3e50;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    color: white;
+    text-align: center;
+    padding: 2rem 0;
+    }
